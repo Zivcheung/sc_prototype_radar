@@ -1,9 +1,11 @@
 import pDataHolder from './pDataHolder';
 import particleEngine from './ParticleEngine';
 import img from '../../assets/dot.png'
+import emiter from '../../utils/observer'
 
 export default class RadarParticle{
     constructor(_domTarget){
+        this.particleEngine = particleEngine;
         this._texturePath = img;
         this.dom = _domTarget;
         this.app = new PIXI.Application({
@@ -23,10 +25,19 @@ export default class RadarParticle{
     setup(){
         this._texture = PIXI.loader.resources[this._texturePath].texture;
         this.mainContainer = new PIXI.Container();
-        particleEngine.setup(this._texture);
+        this.particleEngine.setup(this._texture);
         this.app.stage.addChild(particleEngine.particleContainer);
+        this.activeAnimation = true;
+        this.loop();
+        emiter.$emit('finished:radar');
     }
-    hover(){
-        particleEngine.hover();
+    loop(){
+        this.particleEngine.loop();
+        if(this.activeAnimation){
+            clearTimeout(this.loopTimer)
+            this.loopTimer = setTimeout(()=>{
+                this.loop();
+            },16.7);
+        }
     }
 }

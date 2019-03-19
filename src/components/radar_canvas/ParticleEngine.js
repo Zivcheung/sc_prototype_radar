@@ -49,10 +49,11 @@ export default{
             }
         }
     },
-    
-    //hover
-    hover(){
-        this.particles[20].hover();
+    loop(){
+        for(let i=0,len=this.particles.length;i<len;i++){
+            this.particles[i].recoverLoop();
+        }
     }
+    
 
 }

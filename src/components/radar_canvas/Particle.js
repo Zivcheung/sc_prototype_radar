@@ -33,15 +33,6 @@ class Particle extends BasicParticle {
         this._brosLen = this._bros.push(_bro);
     }
     
-    //turn into an artist button
-    toArtist(){
-        this._isArtist = true;
-        this.height= 
-            this.width=
-                this.targetMin=
-                    this._targetSize = 16;
-    }
-
 
     //wave animation
     doWave(_n,_id,_tintAmount){
@@ -59,17 +50,12 @@ class Particle extends BasicParticle {
             if(_id != this.idWave && _n>3){
                 let _this = this;
                 this.idWave = _id;
+                this.idTime&&clearTimeout(this.idTime);
                 this.width = this.height = _n+this._targetSize; 
-                // this._tintAmount = _tintAmount;
-                //remove previous animation
-                this.reqId && cancelAnimationFrame(this.reqId)
-                clearTimeout(this.idTime);
-                //active new animation
-                this.recoverLoop();
                 this.idTime = setTimeout(function(){
                     for(let i=0;i<_this._brosLen;i++){
                         let bro = _this._bros[i]
-                        bro.doWave(_n-0.5,_id,this._tintAmount);
+                        bro.doWave(_n-0.9,_id,this._tintAmount);
                     }
                 },20);
             }
@@ -77,7 +63,7 @@ class Particle extends BasicParticle {
     }
     //interaction : hover 
     hover(){
-        this._tintAmount = 0;
+        // this._tintAmount = 0;
         this.doWave(20,new Date().valueOf(),this._tintAmount);
     }
     //interaction : press (two states include on and off)
@@ -94,10 +80,8 @@ class Particle extends BasicParticle {
 
     //animation 
     recoverLoop(){
-        this.width = this.height = this.width+(this._targetSize-this.width)*this._vel;
-        if(this.width !=this._targetSize){
-            this.reqId = requestAnimationFrame(this.recoverLoop.bind(this));
-        }
+        let reduce = (this._targetSize-this.width)>-0.2?0:(this._targetSize-this.width);
+        this.width = this.height = this.width+reduce*this._vel;
     }
 
 }
